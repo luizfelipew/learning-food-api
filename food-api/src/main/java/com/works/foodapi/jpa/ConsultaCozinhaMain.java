@@ -2,6 +2,7 @@ package com.works.foodapi.jpa;
 
 import com.works.foodapi.FoodApiApplication;
 import com.works.foodapi.domain.model.Cozinha;
+import com.works.foodapi.domain.repository.CozinhaRepository;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -14,11 +15,11 @@ public class ConsultaCozinhaMain {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        CadastroCozinha cadastroCozinha = applicationContext.getBean(CadastroCozinha.class);
+        CozinhaRepository cozinhas = applicationContext.getBean(CozinhaRepository.class);
 
-        List<Cozinha> cozinhas = cadastroCozinha.listar();
+        List<Cozinha> todasCozinhas = cozinhas.listar();
 
-        cozinhas.forEach(cozinha ->
+        todasCozinhas.forEach(cozinha ->
                 System.out.println(cozinha.getNome()));
     }
 }
