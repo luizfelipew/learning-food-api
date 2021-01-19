@@ -1,8 +1,6 @@
 package com.works.foodapi.infrastructure.repository;
 
-import com.works.foodapi.domain.model.FormaPagamento;
 import com.works.foodapi.domain.model.Permissao;
-import com.works.foodapi.domain.repository.FormaPagamentoRepository;
 import com.works.foodapi.domain.repository.PermissaoRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
