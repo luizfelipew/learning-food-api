@@ -1,8 +1,6 @@
 package com.works.foodapi.infrastructure.repository;
 
-import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.model.Estado;
-import com.works.foodapi.domain.repository.CozinhaRepository;
 import com.works.foodapi.domain.repository.EstadoRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
