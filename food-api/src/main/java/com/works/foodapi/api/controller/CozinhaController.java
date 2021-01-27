@@ -1,5 +1,6 @@
 package com.works.foodapi.api.controller;
 
+import com.works.foodapi.api.model.CozinhasXmlWrapper;
 import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.repository.CozinhaRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,11 @@ public class CozinhaController {
     @GetMapping
     public List<Cozinha> listar() {
         return cozinhaRepository.listar();
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+    public CozinhasXmlWrapper listarXml() {
+        return new CozinhasXmlWrapper(cozinhaRepository.listar());
     }
 
     @GetMapping("/{cozinhaId}")
