@@ -5,6 +5,7 @@ import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.repository.CozinhaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,5 +58,22 @@ public class CozinhaController {
             return ResponseEntity.ok(cozinhaAtual);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{cozinhaId}")
+    public ResponseEntity<Cozinha> deletar(@PathVariable Long cozinhaId){
+        try {
+            Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
+
+            if (Objects.nonNull(cozinha)){
+                cozinhaRepository.remover(cozinha);
+                return ResponseEntity.noContent().build();
+            }
+
+            return ResponseEntity.notFound().build();
+        } catch (DataIntegrityViolationException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
     }
 }
