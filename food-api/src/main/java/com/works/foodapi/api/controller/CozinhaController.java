@@ -3,6 +3,7 @@ package com.works.foodapi.api.controller;
 import com.works.foodapi.api.model.CozinhasXmlWrapper;
 import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.repository.CozinhaRepository;
+import com.works.foodapi.domain.service.CadastroCozinhaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -20,6 +21,7 @@ import java.util.Objects;
 public class CozinhaController {
 
     private final CozinhaRepository cozinhaRepository;
+    private final CadastroCozinhaService cadastroCozinhaService;
 
     @GetMapping
     public List<Cozinha> listar() {
@@ -44,7 +46,7 @@ public class CozinhaController {
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     public Cozinha adicionar(@RequestBody Cozinha cozinha) {
-        return cozinhaRepository.salvar(cozinha);
+        return cadastroCozinhaService.salvar(cozinha);
     }
 
     @PutMapping("/{cozinhaId}")
