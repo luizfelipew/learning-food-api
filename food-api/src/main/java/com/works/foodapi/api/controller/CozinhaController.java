@@ -1,6 +1,8 @@
 package com.works.foodapi.api.controller;
 
 import com.works.foodapi.api.model.CozinhasXmlWrapper;
+import com.works.foodapi.domain.exception.EntidadeEmUsoException;
+import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.repository.CozinhaRepository;
 import com.works.foodapi.domain.service.CadastroCozinhaService;
@@ -21,7 +23,7 @@ import java.util.Objects;
 public class CozinhaController {
 
     private final CozinhaRepository cozinhaRepository;
-    private final CadastroCozinhaService cadastroCozinhaService;
+    private final CadastroCozinhaService cadastroCozinha;
 
     @GetMapping
     public List<Cozinha> listar() {
@@ -46,7 +48,7 @@ public class CozinhaController {
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     public Cozinha adicionar(@RequestBody Cozinha cozinha) {
-        return cadastroCozinhaService.salvar(cozinha);
+        return cadastroCozinha.salvar(cozinha);
     }
 
     @PutMapping("/{cozinhaId}")
@@ -63,17 +65,15 @@ public class CozinhaController {
     }
 
     @DeleteMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> deletar(@PathVariable Long cozinhaId){
+    public ResponseEntity<Cozinha> deletar(@PathVariable Long cozinhaId) {
         try {
-            Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
+            cadastroCozinha.excluir(cozinhaId);
+            return ResponseEntity.noContent().build();
 
-            if (Objects.nonNull(cozinha)){
-                cozinhaRepository.remover(cozinha);
-                return ResponseEntity.noContent().build();
-            }
-
+        } catch (EntidadeNaoEncontradaException ex) {
             return ResponseEntity.notFound().build();
-        } catch (DataIntegrityViolationException ex) {
+
+        } catch (EntidadeEmUsoException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
