@@ -1,13 +1,14 @@
 package com.works.foodapi.api.controller;
 
+import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.works.foodapi.domain.model.Restaurante;
 import com.works.foodapi.domain.repository.RestauranteRepository;
+import com.works.foodapi.domain.service.CadastroCozinhaService;
+import com.works.foodapi.domain.service.CadastroRestauranteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +19,7 @@ import java.util.Objects;
 public class RestauranteController {
 
     private final RestauranteRepository restauranteRepository;
+    private final CadastroRestauranteService cadastroRestaurante;
 
     @GetMapping
     public List<Restaurante> listar() {
@@ -25,7 +27,7 @@ public class RestauranteController {
     }
 
     @GetMapping("/{restauranteId}")
-    public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId){
+    public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId) {
         Restaurante restaurante = restauranteRepository.buscar(restauranteId);
 
         if (Objects.nonNull(restaurante)) {
@@ -34,4 +36,15 @@ public class RestauranteController {
         return ResponseEntity.notFound().build();
     }
 
+    @PostMapping
+    public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
+        try {
+            restaurante = cadastroRestaurante.salvar(restaurante);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(restaurante);
+        } catch (EntidadeNaoEncontradaException ex) {
+            return ResponseEntity.badRequest()
+                    .body(ex.getMessage());
+        }
+    }
 }
