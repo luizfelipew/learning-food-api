@@ -3,9 +3,9 @@ package com.works.foodapi.api.controller;
 import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.works.foodapi.domain.model.Restaurante;
 import com.works.foodapi.domain.repository.RestauranteRepository;
-import com.works.foodapi.domain.service.CadastroCozinhaService;
 import com.works.foodapi.domain.service.CadastroRestauranteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,4 +47,24 @@ public class RestauranteController {
                     .body(ex.getMessage());
         }
     }
+
+    @PutMapping("/{restauranteId}")
+    public ResponseEntity<?> atualizar(@PathVariable Long restauranteId,
+                                                 @RequestBody Restaurante restaurante) {
+        Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
+
+        if(Objects.nonNull(restauranteAtual)) {
+            BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
+            try {
+                restauranteAtual = cadastroRestaurante.salvar(restauranteAtual);
+                return ResponseEntity.ok(restauranteAtual);
+            } catch (EntidadeNaoEncontradaException ex) {
+                return ResponseEntity.badRequest()
+                        .body(ex.getMessage());
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
 }
