@@ -50,10 +50,10 @@ public class RestauranteController {
 
     @PutMapping("/{restauranteId}")
     public ResponseEntity<?> atualizar(@PathVariable Long restauranteId,
-                                                 @RequestBody Restaurante restaurante) {
+                                       @RequestBody Restaurante restaurante) {
         Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
 
-        if(Objects.nonNull(restauranteAtual)) {
+        if (Objects.nonNull(restauranteAtual)) {
             BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
             try {
                 restauranteAtual = cadastroRestaurante.salvar(restauranteAtual);

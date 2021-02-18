@@ -11,3 +11,6 @@ insert into restaurante (id, nome, taxa_frete, cozinha_id) values (4, 'Comida Mi
 
 insert into Estado (id, nome) values (1, 'São Paulo');
 insert into Estado (id, nome) values (2, 'Minas Gerais');
+
+insert into Cidade(id, nome, estado_id) values (1, 'São Paulo', 1);
+insert into Cidade(id, nome, estado_id) values (2, 'Belo Horizonte', 2);
