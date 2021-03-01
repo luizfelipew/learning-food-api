@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -27,20 +28,20 @@ public class CozinhaController {
 
     @GetMapping
     public List<Cozinha> listar() {
-        return cozinhaRepository.listar();
+        return cozinhaRepository.findAll();
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
     public CozinhasXmlWrapper listarXml() {
-        return new CozinhasXmlWrapper(cozinhaRepository.listar());
+        return new CozinhasXmlWrapper(cozinhaRepository.findAll());
     }
 
     @GetMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId) {
-        Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
+        Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId);
 
-        if (Objects.nonNull(cozinha)) {
-            return ResponseEntity.ok(cozinha);
+        if (cozinha.isPresent()) {
+            return ResponseEntity.ok(cozinha.get());
         }
         return ResponseEntity.notFound().build();
     }
@@ -54,12 +55,12 @@ public class CozinhaController {
     @PutMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId,
                                              @RequestBody Cozinha cozinha) {
-        Cozinha cozinhaAtual = cozinhaRepository.buscar(cozinhaId);
+        Optional<Cozinha> cozinhaAtual = cozinhaRepository.findById(cozinhaId);
 
-        if (Objects.nonNull(cozinhaAtual)) {
-            BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-            cozinhaAtual = cadastroCozinha.salvar(cozinhaAtual);
-            return ResponseEntity.ok(cozinhaAtual);
+        if (cozinhaAtual.isPresent()) {
+            BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
+            Cozinha conzinhaSalva = cadastroCozinha.salvar(cozinhaAtual.get());
+            return ResponseEntity.ok(conzinhaSalva);
         }
         return ResponseEntity.notFound().build();
     }
