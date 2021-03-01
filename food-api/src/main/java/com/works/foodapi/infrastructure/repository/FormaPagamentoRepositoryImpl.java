@@ -1,17 +1,15 @@
 package com.works.foodapi.infrastructure.repository;
 
-import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.model.FormaPagamento;
-import com.works.foodapi.domain.repository.CozinhaRepository;
 import com.works.foodapi.domain.repository.FormaPagamentoRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-@Component
+@Repository
 public class FormaPagamentoRepositoryImpl implements FormaPagamentoRepository {
 
     @PersistenceContext
