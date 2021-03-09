@@ -4,6 +4,8 @@ import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.model.Restaurante;
 import com.works.foodapi.domain.repository.CozinhaRepository;
 import com.works.foodapi.domain.repository.RestauranteRepository;
+import com.works.foodapi.infrastructure.repository.spec.RestauranteComFreteGratisSpec;
+import com.works.foodapi.infrastructure.repository.spec.RestauranteComNomeSemelhanteSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,6 +59,14 @@ public class TesteController {
     @GetMapping("/restaurantes/top2-por-nome")
     public List<Restaurante> restauranteTop2PorNome(String nome) {
         return restauranteRepository.findTop2ByNomeContaining(nome);
+    }
+
+    @GetMapping("/restaurantes/com-frete-gratis")
+    public List<Restaurante> restaurantesComFreteGratis(String nome) {
+        var comFreteGratis = new RestauranteComFreteGratisSpec();
+        var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
+
+        return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
     }
 
 
