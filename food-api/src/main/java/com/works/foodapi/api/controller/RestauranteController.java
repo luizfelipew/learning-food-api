@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -36,48 +37,60 @@ public class RestauranteController {
         return cadastroRestaurante.buscarOuFalhar(restauranteId);
     }
 
+//    @PostMapping
+//    public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
+//        try {
+//            restaurante = cadastroRestaurante.salvar(restaurante);
+//            return ResponseEntity.status(HttpStatus.CREATED)
+//                    .body(restaurante);
+//        } catch (EntidadeNaoEncontradaException ex) {
+//            return ResponseEntity.badRequest()
+//                    .body(ex.getMessage());
+//        }
+//    }
+
     @PostMapping
-    public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
-        try {
-            restaurante = cadastroRestaurante.salvar(restaurante);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(restaurante);
-        } catch (EntidadeNaoEncontradaException ex) {
-            return ResponseEntity.badRequest()
-                    .body(ex.getMessage());
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public Restaurante adicionar(@RequestBody Restaurante restaurante) {
+        return cadastroRestaurante.salvar(restaurante);
     }
 
-    @PutMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizar(@PathVariable Long restauranteId,
-                                       @RequestBody Restaurante restaurante) {
-        Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
+//    @PutMapping("/{restauranteId}")
+//    public ResponseEntity<?> atualizar(@PathVariable Long restauranteId,
+//                                       @RequestBody Restaurante restaurante) {
+//        Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
+//
+//        if (restauranteAtual.isPresent()) {
+//            BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id",
+//                    "formasPagamento", "endereco", "dataCadastro", "produtos");
+//            try {
+//                Restaurante restauranteSalva = cadastroRestaurante.salvar(restauranteAtual.get());
+//                return ResponseEntity.ok(restauranteSalva);
+//            } catch (EntidadeNaoEncontradaException ex) {
+//                return ResponseEntity.badRequest()
+//                        .body(ex.getMessage());
+//            }
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
 
-        if (restauranteAtual.isPresent()) {
-            BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id",
-                    "formasPagamento", "endereco", "dataCadastro", "produtos");
-            try {
-                Restaurante restauranteSalva = cadastroRestaurante.salvar(restauranteAtual.get());
-                return ResponseEntity.ok(restauranteSalva);
-            } catch (EntidadeNaoEncontradaException ex) {
-                return ResponseEntity.badRequest()
-                        .body(ex.getMessage());
-            }
-        }
-        return ResponseEntity.notFound().build();
+    @PutMapping("/{restauranteId}")
+    public Restaurante atualizar(@PathVariable Long restauranteId,
+                                       @RequestBody Restaurante restaurante) {
+        Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
+
+        BeanUtils.copyProperties(restaurante, restauranteAtual, "id",
+                "formasPagamento", "endereco", "dataCadastro", "produtos");
+        return cadastroRestaurante.salvar(restauranteAtual);
     }
 
     @PatchMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId,
+    public Restaurante atualizarParcial(@PathVariable Long restauranteId,
                                               @RequestBody Map<String, Object> campos) {
-        Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
+        Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-        if (restauranteAtual.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        merge(campos, restauranteAtual.get());
-        return atualizar(restauranteId, restauranteAtual.get());
+        merge(campos, restauranteAtual);
+        return atualizar(restauranteId, restauranteAtual);
     }
 
     private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {

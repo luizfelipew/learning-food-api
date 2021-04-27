@@ -24,17 +24,17 @@ public class CadastroEstadoService {
         return estadoRepository.save(estado);
     }
 
-    public void excluir(Estado estado) {
+    public void excluir(Long estadoId) {
         try {
-            estadoRepository.delete(estado);
+            estadoRepository.deleteById(estadoId);
         } catch (EmptyResultDataAccessException ex) {
             throw new EntidadeNaoEncontradaException(
-                    String.format(MSG_ESTADO_NAO_ENCONTRADO, estado.getId())
+                    String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)
             );
 
         } catch (DataIntegrityViolationException ex) {
             throw new EntidadeEmUsoException(
-                    String.format(MSG_ESTADO_EM_USO, estado.getId())
+                    String.format(MSG_ESTADO_EM_USO, estadoId)
             );
         }
     }
