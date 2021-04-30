@@ -2,6 +2,7 @@ package com.works.foodapi.domain.service;
 
 import com.works.foodapi.domain.exception.EntidadeEmUsoException;
 import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
+import com.works.foodapi.domain.exception.EstadoNaoEncontradoException;
 import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.model.Estado;
 import com.works.foodapi.domain.repository.CozinhaRepository;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CadastroEstadoService {
 
-    private static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe um cadastro de estado com código %d";
     private static final String MSG_ESTADO_EM_USO = "Estado de código %d não pode ser removida, pois está em uso";
 
     @Autowired
@@ -28,9 +28,7 @@ public class CadastroEstadoService {
         try {
             estadoRepository.deleteById(estadoId);
         } catch (EmptyResultDataAccessException ex) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)
-            );
+            throw new EstadoNaoEncontradoException(estadoId);
 
         } catch (DataIntegrityViolationException ex) {
             throw new EntidadeEmUsoException(
@@ -42,7 +40,6 @@ public class CadastroEstadoService {
     public Estado buscarOuFalhar(final Long estadoId) {
         return estadoRepository
                 .findById(estadoId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(
-                        String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
+                .orElseThrow(() -> new EstadoNaoEncontradoException(estadoId));
     }
 }

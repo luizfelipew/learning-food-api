@@ -1,6 +1,7 @@
 package com.works.foodapi.api.controller;
 
 import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
+import com.works.foodapi.domain.exception.EstadoNaoEncontradoException;
 import com.works.foodapi.domain.exception.NegocioException;
 import com.works.foodapi.domain.model.Cidade;
 import com.works.foodapi.domain.repository.CidadeRepository;
@@ -37,21 +38,22 @@ public class CidadeController {
     public Cidade adicionar(@RequestBody Cidade cidade) {
         try {
             return cadastroCidade.salvar(cidade);
-        } catch (EntidadeNaoEncontradaException ex) {
-            throw new NegocioException(ex.getMessage());
+        } catch (EstadoNaoEncontradoException ex) {
+            throw new NegocioException(ex.getMessage(), ex);
         }
     }
 
     @PutMapping("/{cidadeId}")
     public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
-        Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
-
-        BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 
         try {
+            Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
+
+            BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+
             return cadastroCidade.salvar(cidadeAtual);
-        } catch (EntidadeNaoEncontradaException ex) {
-            throw new NegocioException(ex.getMessage());
+        } catch (EstadoNaoEncontradoException ex) {
+            throw new NegocioException(ex.getMessage(), ex);
         }
     }
 
