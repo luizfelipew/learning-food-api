@@ -1,11 +1,8 @@
 package com.works.foodapi.domain.service;
 
 import com.works.foodapi.domain.exception.EntidadeEmUsoException;
-import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.works.foodapi.domain.exception.EstadoNaoEncontradoException;
-import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.model.Estado;
-import com.works.foodapi.domain.repository.CozinhaRepository;
 import com.works.foodapi.domain.repository.EstadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
