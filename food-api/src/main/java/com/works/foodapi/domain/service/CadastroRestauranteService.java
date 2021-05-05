@@ -1,6 +1,7 @@
 package com.works.foodapi.domain.service;
 
 import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
+import com.works.foodapi.domain.exception.RestauranteNaoEncontradoException;
 import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.model.Restaurante;
 import com.works.foodapi.domain.repository.CozinhaRepository;
@@ -35,8 +36,7 @@ public class CadastroRestauranteService {
     public Restaurante buscarOuFalhar(final Long restauranteId) {
         return restauranteRepository
                 .findById(restauranteId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(
-                        String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId)));
+                .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
     }
 
 }
