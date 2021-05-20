@@ -1,7 +1,5 @@
 package com.works.foodapi.api.controller;
 
-import com.works.foodapi.api.exceptionhandler.Problema;
-import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.works.foodapi.domain.exception.EstadoNaoEncontradoException;
 import com.works.foodapi.domain.exception.NegocioException;
 import com.works.foodapi.domain.model.Cidade;
@@ -10,13 +8,9 @@ import com.works.foodapi.domain.service.CadastroCidadeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/cidades")
