@@ -1,23 +1,16 @@
 package com.works.foodapi.api.controller;
 
 import com.works.foodapi.api.model.CozinhasXmlWrapper;
-import com.works.foodapi.domain.exception.EntidadeEmUsoException;
-import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.repository.CozinhaRepository;
 import com.works.foodapi.domain.service.CadastroCozinhaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,10 +25,10 @@ public class CozinhaController {
         return cozinhaRepository.findAll();
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
-    public CozinhasXmlWrapper listarXml() {
-        return new CozinhasXmlWrapper(cozinhaRepository.findAll());
-    }
+//    @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+//    public CozinhasXmlWrapper listarXml() {
+//        return new CozinhasXmlWrapper(cozinhaRepository.findAll());
+//    }
 
     @GetMapping("/{cozinhaId}")
     public Cozinha buscar(@PathVariable Long cozinhaId) {
