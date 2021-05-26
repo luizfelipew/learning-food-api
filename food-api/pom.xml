@@ -15,7 +15,7 @@
 	<description>API de delivery de comida</description>
 
 	<properties>
-		<java.version>12</java.version>
+		<java.version>11</java.version>
 	</properties>
 
 	<dependencies>
@@ -56,6 +56,10 @@
 			<artifactId>flyway-core</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
 		</dependency>
@@ -66,6 +70,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>2.5.0</version>
 			</plugin>
 		</plugins>
 	</build>
