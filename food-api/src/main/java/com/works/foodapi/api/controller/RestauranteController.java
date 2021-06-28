@@ -2,7 +2,6 @@ package com.works.foodapi.api.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.works.foodapi.Groups;
 import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.works.foodapi.domain.exception.NegocioException;
 import com.works.foodapi.domain.model.Restaurante;
@@ -15,10 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class RestauranteController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Restaurante adicionar(
-            @RequestBody @Validated(Groups.CadastroRestaurante.class) Restaurante restaurante) {
+            @RequestBody @Valid Restaurante restaurante) {
 
         try {
             return cadastroRestaurante.salvar(restaurante);
