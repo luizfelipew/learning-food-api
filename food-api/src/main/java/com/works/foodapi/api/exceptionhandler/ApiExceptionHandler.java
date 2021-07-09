@@ -8,6 +8,9 @@ import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.works.foodapi.domain.exception.NegocioException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +37,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             + "Tente novamente e se o problema persistir, entre em contato "
             + "com o administrador do sistema.";
 
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -49,11 +54,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         List<Problem.Field> problemFields = bindingResult.getFieldErrors()
                 .stream()
-                .map(fieldError ->
-                        Problem.Field.builder()
-                                .name(fieldError.getField())
-                                .userMessage(fieldError.getDefaultMessage())
-                                .build())
+                .map(fieldError -> {
+                    String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+
+                    return Problem.Field.builder()
+                            .name(fieldError.getField())
+                            .userMessage(message)
+                            .build();
+                })
                 .collect(Collectors.toList());
 
         Problem problem = createProblemBuilder(status, problemType, detail)
