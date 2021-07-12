@@ -29,19 +29,20 @@ public class Restaurante {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @NotNull
-//    @NotEmpty
+    // @NotNull
+    // @NotEmpty
     @NotBlank
     @Column(nullable = false)
     private String nome;
 
-//    @DecimalMin("0")
+    // @DecimalMin("0")
+    @NotNull
     @PositiveOrZero
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
-//    @JsonIgnoreProperties("hibernateLazyInitializer")
-//    @JsonIgnore
+    // @JsonIgnoreProperties("hibernateLazyInitializer")
+    // @JsonIgnore
     @Valid
     @ConvertGroup(from = Default.class, to = Groups.ConzinhaId.class)
     @NotNull
