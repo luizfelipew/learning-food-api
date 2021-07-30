@@ -1,7 +1,7 @@
 package com.works.foodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.works.foodapi.Groups;
+import com.works.foodapi.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,7 +37,6 @@ public class Restaurante {
 
     // @DecimalMin("0")
     @NotNull
-//    @PositiveOrZero(message = "{TaxaFrete.invalida}")
     @PositiveOrZero
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;

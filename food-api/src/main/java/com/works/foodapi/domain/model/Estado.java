@@ -1,6 +1,6 @@
 package com.works.foodapi.domain.model;
 
-import com.works.foodapi.Groups;
+import com.works.foodapi.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
