@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.works.foodapi.core.validation.Groups;
 import com.works.foodapi.core.validation.Multiplo;
 import com.works.foodapi.core.validation.TaxaFrete;
+import com.works.foodapi.core.validation.ValorZeroIncluiDescricao;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,6 +22,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@ValorZeroIncluiDescricao(
+        valorField = "taxaFrete",
+        descricaoField = "nome",
+        descricaoObrigatoria = "Frete Grátis"
+)
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
