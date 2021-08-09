@@ -3,6 +3,7 @@ package com.works.foodapi.api.exceptionhandler;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import com.works.foodapi.core.validation.ValidacaoException;
 import com.works.foodapi.domain.exception.EntidadeEmUsoException;
 import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.works.foodapi.domain.exception.NegocioException;
@@ -41,9 +42,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @Autowired
     private MessageSource messageSource;
 
-    @Override
-    public ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex,
+    public ResponseEntity<Object> handleValidationInternal(
+            Exception ex,
+            BindingResult bindingResult,
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
@@ -51,10 +52,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.DADOS_INVALIDOS;
         String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
 
-        BindingResult bindingResult = ex.getBindingResult();
-
-        List<Problem.Object> problemObjects = bindingResult.getAllErrors()
-                .stream()
+        List<Problem.Object> problemObjects = bindingResult.getAllErrors().stream()
                 .map(objectError -> {
                     String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
 
@@ -77,6 +75,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
 
         return handleExceptionInternal(ex, problem, headers, status, request);
+
+    }
+
+    @Override
+    public ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+
+        return handleValidationInternal(ex, ex.getBindingResult(), headers, status, request);
     }
 
     @ExceptionHandler(Exception.class)
@@ -246,6 +255,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problem,
                 new HttpHeaders(), status, request);
     }
+
+    @ExceptionHandler({ ValidacaoException.class })
+    public ResponseEntity<Object> handleValidacaoException(ValidacaoException ex, WebRequest request) {
+        return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(),
+                HttpStatus.BAD_REQUEST, request);
+    }
+
 
     @ExceptionHandler(NegocioException.class)
     public ResponseEntity<?> handleNegocio(
