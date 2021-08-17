@@ -1,5 +1,7 @@
 package com.works.foodapi;
 
+import com.works.foodapi.domain.exception.CozinhaNaoEncontradaException;
+import com.works.foodapi.domain.exception.EntidadeEmUsoException;
 import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.service.CadastroCozinhaService;
 import org.junit.jupiter.api.Assertions;
@@ -46,6 +48,23 @@ class CadastroCozinhaIntegrationTests {
         assertThat(erroEsperado).isNotNull();
     }
 
+    @Test
+    void deveFalhar_QuandoExcluirCozinhaEmUso() {
+        EntidadeEmUsoException errorEsperado = Assertions
+                .assertThrows(EntidadeEmUsoException.class, () -> {
+                    cadastroCozinha.excluir(1L);
+                });
 
+        assertThat(errorEsperado).isNotNull();
+    }
 
+    @Test
+    void deveFalhar_QuandoExcluirCozinhaInexistente() {
+        CozinhaNaoEncontradaException errorEsperado = Assertions
+                .assertThrows(CozinhaNaoEncontradaException.class, () -> {
+                    cadastroCozinha.excluir(100L);
+                });
+
+        assertThat(errorEsperado).isNotNull();
+    }
 }
