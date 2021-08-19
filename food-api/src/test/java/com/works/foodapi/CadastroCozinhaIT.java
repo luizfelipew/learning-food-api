@@ -2,6 +2,7 @@ package com.works.foodapi;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,14 +21,17 @@ class CadastroCozinhaIT {
     @LocalServerPort
     private int port;
 
-    @Test
-    void deveRetornarStatus200_QuandoConsultarCozinhas() {
+    @BeforeEach
+    void setUp() {
         // para mostrar o log se falhar
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        RestAssured.port = port;
+        RestAssured.basePath = "/cozinhas";
+    }
 
+    @Test
+    void deveRetornarStatus200_QuandoConsultarCozinhas() {
         given()
-                .basePath("/cozinhas")
-                .port(port)
                 .accept(ContentType.JSON)
                 .when()
                 .get()
@@ -37,12 +41,7 @@ class CadastroCozinhaIT {
 
     @Test
     void deveConter4Cozinhas_QuandoConsultarCozinhas() {
-        // para mostrar o log se falhar
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-
         given()
-                .basePath("/cozinhas")
-                .port(port)
                 .accept(ContentType.JSON)
                 .when()
                 .get()
