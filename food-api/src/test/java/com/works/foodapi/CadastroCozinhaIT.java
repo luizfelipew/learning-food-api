@@ -2,9 +2,11 @@ package com.works.foodapi;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -21,12 +23,17 @@ class CadastroCozinhaIT {
     @LocalServerPort
     private int port;
 
+    @Autowired
+    private Flyway flyway;
+
     @BeforeEach
     void setUp() {
         // para mostrar o log se falhar
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.port = port;
         RestAssured.basePath = "/cozinhas";
+
+        flyway.migrate();
     }
 
     @Test
@@ -48,5 +55,17 @@ class CadastroCozinhaIT {
                 .then()
                 .body("", hasSize(4))
                 .body("nome", hasItems("Indiana", "Tailandesa"));
+    }
+
+    @Test
+    void testedeveRetornarStatus201_QuandoCadastrarCozinha() {
+        given()
+                .body("{ \"nome\" : \"Chinesa\"}")
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .when()
+                .post()
+                .then()
+                .statusCode(HttpStatus.CREATED.value());
     }
 }
