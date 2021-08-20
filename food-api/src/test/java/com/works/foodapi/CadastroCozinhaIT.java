@@ -1,8 +1,10 @@
 package com.works.foodapi;
 
+import com.works.foodapi.domain.model.Cozinha;
+import com.works.foodapi.domain.repository.CozinhaRepository;
+import com.works.foodapi.util.DataBaseCleaner;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +28,10 @@ class CadastroCozinhaIT {
     private int port;
 
     @Autowired
-    private Flyway flyway;
+    private DataBaseCleaner dataBaseCleaner;
+
+    @Autowired
+    private CozinhaRepository cozinhaRepository;
 
     @BeforeEach
     void setUp() {
@@ -35,7 +40,8 @@ class CadastroCozinhaIT {
         RestAssured.port = port;
         RestAssured.basePath = "/cozinhas";
 
-        flyway.migrate();
+        dataBaseCleaner.clearTables();
+        prepararDados();
     }
 
     @Test
@@ -49,14 +55,14 @@ class CadastroCozinhaIT {
     }
 
     @Test
-    void deveConter4Cozinhas_QuandoConsultarCozinhas() {
+    void deveConter2Cozinhas_QuandoConsultarCozinhas() {
         given()
                 .accept(ContentType.JSON)
                 .when()
                 .get()
                 .then()
-                .body("", hasSize(4))
-                .body("nome", hasItems("Indiana", "Tailandesa"));
+                .body("", hasSize(2))
+                .body("nome", hasItems("Americana", "Tailandesa"));
     }
 
     @Test
@@ -69,5 +75,15 @@ class CadastroCozinhaIT {
                 .post()
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    private void prepararDados() {
+        Cozinha cozinha1 = new Cozinha();
+        cozinha1.setNome("Tailandesa");
+        cozinhaRepository.save(cozinha1);
+
+        Cozinha cozinha2 = new Cozinha();
+        cozinha2.setNome("Americana");
+        cozinhaRepository.save(cozinha2);
     }
 }
