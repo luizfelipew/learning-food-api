@@ -5,9 +5,7 @@ import org.springframework.beans.BeanUtils;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.ValidationException;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.util.Locale;
 import java.util.Objects;
 
 public class ValorZeroIncluiDescricaoValidator implements
