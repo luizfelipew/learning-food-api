@@ -1,9 +1,8 @@
 package com.works.foodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.works.foodapi.core.validation.Groups;
-import com.works.foodapi.core.validation.Multiplo;
-import com.works.foodapi.core.validation.TaxaFrete;
 import com.works.foodapi.core.validation.ValorZeroIncluiDescricao;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,6 +52,7 @@ public class Restaurante {
 
     // @JsonIgnoreProperties("hibernateLazyInitializer")
     // @JsonIgnore
+    @JsonIgnoreProperties(value = "nome", allowGetters = true)
     @Valid
     @ConvertGroup(from = Default.class, to = Groups.ConzinhaId.class)
     @NotNull
