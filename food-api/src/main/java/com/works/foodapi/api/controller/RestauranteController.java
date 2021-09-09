@@ -2,6 +2,7 @@ package com.works.foodapi.api.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.works.foodapi.api.model.RestauranteModel;
 import com.works.foodapi.core.validation.ValidacaoException;
 import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.works.foodapi.domain.exception.NegocioException;
@@ -40,8 +41,11 @@ public class RestauranteController {
     }
 
     @GetMapping("/{restauranteId}")
-    public Restaurante buscar(@PathVariable Long restauranteId) {
-        return cadastroRestaurante.buscarOuFalhar(restauranteId);
+    public RestauranteModel buscar(@PathVariable Long restauranteId) {
+        final Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
+
+        final RestauranteModel restauranteModel = null;
+        return restauranteModel;
     }
 
     @PostMapping
