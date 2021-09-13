@@ -3,7 +3,6 @@ package com.works.foodapi.infrastructure.repository;
 import com.works.foodapi.domain.model.Restaurante;
 import com.works.foodapi.domain.repository.RestauranteRepository;
 import com.works.foodapi.domain.repository.RestauranteRepositoryQueries;
-import com.works.foodapi.infrastructure.repository.spec.RestauranteSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
@@ -18,11 +17,11 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import static com.works.foodapi.infrastructure.repository.spec.RestauranteSpecs.*;
+import static com.works.foodapi.infrastructure.repository.spec.RestauranteSpecs.comFreteGratis;
+import static com.works.foodapi.infrastructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
 
 @Repository
 public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {

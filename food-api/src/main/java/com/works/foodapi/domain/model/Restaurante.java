@@ -1,6 +1,5 @@
 package com.works.foodapi.domain.model;
 
-import com.works.foodapi.core.validation.Groups;
 import com.works.foodapi.core.validation.ValorZeroIncluiDescricao;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,12 +7,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -36,22 +29,22 @@ public class Restaurante {
 
     // @NotNull
     // @NotEmpty
-    @NotBlank
+//    @NotBlank
     @Column(nullable = false)
     private String nome;
 
     // @DecimalMin("0")
     // @TaxaFrete
-    @NotNull
-    @PositiveOrZero
+//    @NotNull
+//    @PositiveOrZero
 //    @Multiplo(numero = 5)
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
     // @JsonIgnoreProperties("hibernateLazyInitializer")
-    @Valid
-    @ConvertGroup(from = Default.class, to = Groups.ConzinhaId.class)
-    @NotNull
+//    @Valid
+//    @ConvertGroup(from = Default.class, to = Groups.ConzinhaId.class)
+//    @NotNull
     @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
