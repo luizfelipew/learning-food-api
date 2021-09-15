@@ -1,11 +1,11 @@
 package com.works.foodapi.api.controller;
 
+import com.works.foodapi.api.assembler.RestauranteInputDisassembler;
 import com.works.foodapi.api.assembler.RestauranteModelAssembler;
 import com.works.foodapi.api.model.RestauranteModel;
 import com.works.foodapi.api.model.input.RestauranteInput;
 import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.works.foodapi.domain.exception.NegocioException;
-import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.model.Restaurante;
 import com.works.foodapi.domain.repository.RestauranteRepository;
 import com.works.foodapi.domain.service.CadastroRestauranteService;
@@ -26,6 +26,7 @@ public class RestauranteController {
     private final RestauranteRepository restauranteRepository;
     private final CadastroRestauranteService cadastroRestaurante;
     private final RestauranteModelAssembler restauranteModelAssembler;
+    private final RestauranteInputDisassembler restauranteInputDisassembler;
     private final SmartValidator validator;
 
     @GetMapping
@@ -46,7 +47,7 @@ public class RestauranteController {
             @RequestBody @Valid RestauranteInput restauranteInput) {
 
         try {
-            final Restaurante restaurante = toDomainObject(restauranteInput);
+            final Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
 
             return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restaurante));
         } catch (EntidadeNaoEncontradaException ex) {
@@ -58,7 +59,7 @@ public class RestauranteController {
     public RestauranteModel atualizar(@PathVariable Long restauranteId,
                                       @RequestBody @Valid RestauranteInput restauranteInput) {
         try {
-            final Restaurante restaurante = toDomainObject(restauranteInput);
+            final Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
             Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
             BeanUtils.copyProperties(restaurante, restauranteAtual, "id",
@@ -70,17 +71,4 @@ public class RestauranteController {
         }
     }
 
-    private Restaurante toDomainObject(RestauranteInput restauranteInput) {
-        Restaurante restaurante = new Restaurante();
-
-        restaurante.setNome(restauranteInput.getNome());
-        restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
-
-        Cozinha cozinha = new Cozinha();
-        cozinha.setId(restauranteInput.getCozinha().getId());
-
-        restaurante.setCozinha(cozinha);
-
-        return restaurante;
-    }
 }
