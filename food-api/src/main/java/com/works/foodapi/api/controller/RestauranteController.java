@@ -10,6 +10,7 @@ import com.works.foodapi.domain.model.Restaurante;
 import com.works.foodapi.domain.repository.RestauranteRepository;
 import com.works.foodapi.domain.service.CadastroRestauranteService;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.SmartValidator;
@@ -36,7 +37,7 @@ public class RestauranteController {
 
     @GetMapping("/{restauranteId}")
     public RestauranteModel buscar(@PathVariable Long restauranteId) {
-        final Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
+        val restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
         return restauranteModelAssembler.toModel(restaurante);
     }
@@ -47,7 +48,7 @@ public class RestauranteController {
             @RequestBody @Valid RestauranteInput restauranteInput) {
 
         try {
-            final Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
+            val restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
 
             return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restaurante));
         } catch (EntidadeNaoEncontradaException ex) {
@@ -59,11 +60,9 @@ public class RestauranteController {
     public RestauranteModel atualizar(@PathVariable Long restauranteId,
                                       @RequestBody @Valid RestauranteInput restauranteInput) {
         try {
-            final Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
-            Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
+            val restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-            BeanUtils.copyProperties(restaurante, restauranteAtual, "id",
-                    "formasPagamento", "endereco", "dataCadastro", "produtos");
+            restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 
             return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restauranteAtual));
         } catch (EntidadeNaoEncontradaException ex) {
