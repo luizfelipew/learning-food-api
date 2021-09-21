@@ -30,6 +30,10 @@ public class CadastroCozinhaService {
     public void excluir(Long cozinhaId) {
         try {
             cozinhaRepository.deleteById(cozinhaId);
+            // para resolver o problema de nao pegar a exception do banco
+            // quando executa de verdade no banco
+            // descarrega todas mudancas pendentes no banco de dados
+            cozinhaRepository.flush();
         } catch (EmptyResultDataAccessException ex) {
             throw new CozinhaNaoEncontradaException(cozinhaId);
 
