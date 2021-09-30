@@ -32,6 +32,23 @@ public class CadastroRestauranteService {
         return restauranteRepository.save(restaurante);
     }
 
+    // JPA esta gerenciando ela sincroniza com banco de dados (update) com o setAtivo
+    @Transactional
+    public void ativar(final Long restaurantId) {
+        Restaurante restauranteAtual = buscarOuFalhar(restaurantId);
+
+        restauranteAtual.ativar();
+
+    }
+
+    @Transactional
+    public void inativar(final Long restaurantId) {
+        Restaurante restauranteAtual = buscarOuFalhar(restaurantId);
+
+        restauranteAtual.inativar();
+
+    }
+
     public Restaurante buscarOuFalhar(final Long restauranteId) {
         return restauranteRepository
                 .findById(restauranteId)
