@@ -1,6 +1,7 @@
 package com.works.foodapi.domain.service;
 
 import com.works.foodapi.domain.exception.RestauranteNaoEncontradoException;
+import com.works.foodapi.domain.model.Cidade;
 import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.model.Restaurante;
 import com.works.foodapi.domain.repository.CozinhaRepository;
@@ -21,14 +22,21 @@ public class CadastroRestauranteService {
     private CadastroCozinhaService cadastroCozinha;
 
     @Autowired
+    private CadastroCidadeService cadastroCidade;
+
+    @Autowired
     private CozinhaRepository cozinhaRepository;
 
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
-        Long cozinhaId = restaurante.getCozinha().getId();
-        Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
+        final Long cozinhaId = restaurante.getCozinha().getId();
+        final Long cidadeId = restaurante.getEndereco().getCidade().getId();
+
+        final Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
+        final Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
 
         restaurante.setCozinha(cozinha);
+        restaurante.getEndereco().setCidade(cidade);
         return restauranteRepository.save(restaurante);
     }
 
@@ -46,7 +54,6 @@ public class CadastroRestauranteService {
         Restaurante restauranteAtual = buscarOuFalhar(restaurantId);
 
         restauranteAtual.inativar();
-
     }
 
     public Restaurante buscarOuFalhar(final Long restauranteId) {

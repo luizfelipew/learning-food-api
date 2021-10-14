@@ -4,6 +4,8 @@ import com.works.foodapi.api.assembler.RestauranteInputDisassembler;
 import com.works.foodapi.api.assembler.RestauranteModelAssembler;
 import com.works.foodapi.api.model.RestauranteModel;
 import com.works.foodapi.api.model.input.RestauranteInput;
+import com.works.foodapi.domain.exception.CidadeNaoEncontradaException;
+import com.works.foodapi.domain.exception.CozinhaNaoEncontradaException;
 import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.works.foodapi.domain.exception.NegocioException;
 import com.works.foodapi.domain.repository.RestauranteRepository;
@@ -49,7 +51,7 @@ public class RestauranteController {
             val restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
 
             return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restaurante));
-        } catch (EntidadeNaoEncontradaException ex) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException ex) {
             throw new NegocioException(ex.getMessage());
         }
     }
@@ -63,7 +65,7 @@ public class RestauranteController {
             restauranteInputDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 
             return restauranteModelAssembler.toModel(cadastroRestaurante.salvar(restauranteAtual));
-        } catch (EntidadeNaoEncontradaException ex) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException ex) {
             throw new NegocioException(ex.getMessage());
         }
     }
