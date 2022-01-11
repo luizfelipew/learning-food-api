@@ -3,6 +3,7 @@ package com.works.foodapi.domain.service;
 import com.works.foodapi.domain.exception.RestauranteNaoEncontradoException;
 import com.works.foodapi.domain.model.Cidade;
 import com.works.foodapi.domain.model.Cozinha;
+import com.works.foodapi.domain.model.FormaPagamento;
 import com.works.foodapi.domain.model.Restaurante;
 import com.works.foodapi.domain.repository.CozinhaRepository;
 import com.works.foodapi.domain.repository.RestauranteRepository;
@@ -26,6 +27,9 @@ public class CadastroRestauranteService {
 
     @Autowired
     private CozinhaRepository cozinhaRepository;
+
+    @Autowired
+    private CadastroFormaPagamentoService cadastroFormaPagamento;
 
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
@@ -54,6 +58,22 @@ public class CadastroRestauranteService {
         Restaurante restauranteAtual = buscarOuFalhar(restaurantId);
 
         restauranteAtual.inativar();
+    }
+
+    @Transactional
+    public void desassociarFormaPagamento(final Long restauranteId, final Long formaPagamentoId){
+        final Restaurante restaurante = buscarOuFalhar(restauranteId);
+        final FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
+
+        restaurante.removerFormaPagamento(formaPagamento);
+    }
+
+    @Transactional
+    public void associarFormaPagamento(final Long restauranteId, final Long formaPagamentoId){
+        final Restaurante restaurante = buscarOuFalhar(restauranteId);
+        final FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
+
+        restaurante.adicionarFormaPagamento(formaPagamento);
     }
 
     public Restaurante buscarOuFalhar(final Long restauranteId) {
