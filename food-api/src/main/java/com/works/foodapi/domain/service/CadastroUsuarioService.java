@@ -2,6 +2,7 @@ package com.works.foodapi.domain.service;
 
 import com.works.foodapi.domain.exception.NegocioException;
 import com.works.foodapi.domain.exception.UsuarioNaoEncontradoException;
+import com.works.foodapi.domain.model.Grupo;
 import com.works.foodapi.domain.model.Usuario;
 import com.works.foodapi.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class CadastroUsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private CadastroGrupoService cadastroGrupo;
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
@@ -40,6 +44,22 @@ public class CadastroUsuarioService {
         }
 
         usuario.setSenha(novaSenha);
+    }
+
+    @Transactional
+    public void desassociarGrupo(Long usuarioId, Long grupoId) {
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+
+        usuario.removerGrupo(grupo);
+    }
+
+    @Transactional
+    public void associarGrupo(Long usuarioId, Long grupoId) {
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+
+        usuario.adicionarGrupo(grupo);
     }
 
     public Usuario buscarOuFalhar(final Long usuarioId) {
