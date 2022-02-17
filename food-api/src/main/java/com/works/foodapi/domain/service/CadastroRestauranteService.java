@@ -1,10 +1,7 @@
 package com.works.foodapi.domain.service;
 
 import com.works.foodapi.domain.exception.RestauranteNaoEncontradoException;
-import com.works.foodapi.domain.model.Cidade;
-import com.works.foodapi.domain.model.Cozinha;
-import com.works.foodapi.domain.model.FormaPagamento;
-import com.works.foodapi.domain.model.Restaurante;
+import com.works.foodapi.domain.model.*;
 import com.works.foodapi.domain.repository.CozinhaRepository;
 import com.works.foodapi.domain.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,9 @@ public class CadastroRestauranteService {
 
     @Autowired
     private CadastroFormaPagamentoService cadastroFormaPagamento;
+
+    @Autowired
+    private CadastroUsuarioService cadastroUsuario;
 
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
@@ -86,6 +86,22 @@ public class CadastroRestauranteService {
     public void fechar(final Long restauranteId){
         final Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
         restauranteAtual.fechar();
+    }
+
+    @Transactional
+    public void desassociarResponsavel(final Long restauranteId, final Long usuarioId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+
+        restaurante.removerResponsavel(usuario);
+    }
+
+    @Transactional
+    public void associarResponsavel(final Long restauranteId, final Long usuarioId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+
+        restaurante.adicionarResponsavel(usuario);
     }
 
     public Restaurante buscarOuFalhar(final Long restauranteId) {
