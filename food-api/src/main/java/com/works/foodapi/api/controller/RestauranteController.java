@@ -4,10 +4,7 @@ import com.works.foodapi.api.assembler.RestauranteInputDisassembler;
 import com.works.foodapi.api.assembler.RestauranteModelAssembler;
 import com.works.foodapi.api.model.RestauranteModel;
 import com.works.foodapi.api.model.input.RestauranteInput;
-import com.works.foodapi.domain.exception.CidadeNaoEncontradaException;
-import com.works.foodapi.domain.exception.CozinhaNaoEncontradaException;
-import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
-import com.works.foodapi.domain.exception.NegocioException;
+import com.works.foodapi.domain.exception.*;
 import com.works.foodapi.domain.repository.RestauranteRepository;
 import com.works.foodapi.domain.service.CadastroRestauranteService;
 import lombok.RequiredArgsConstructor;
@@ -80,6 +77,26 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativar(@PathVariable final Long restauranteId) {
         cadastroRestaurante.inativar(restauranteId);
+    }
+
+    @DeleteMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativarMultiplos(@RequestBody List<Long> restauranteIds) {
+        try {
+            cadastroRestaurante.inativar(restauranteIds);
+        } catch (RestauranteNaoEncontradoException ex) {
+            throw new NegocioException(ex.getMessage(), ex);
+        }
+    }
+
+    @PutMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativarMultiplos(@RequestBody List<Long> restauranteIds) {
+        try {
+            cadastroRestaurante.ativar(restauranteIds);
+        } catch (RestauranteNaoEncontradoException ex) {
+            throw new NegocioException(ex.getMessage(), ex);
+        }
     }
 
     @PutMapping("/{restauranteId}/abertura")

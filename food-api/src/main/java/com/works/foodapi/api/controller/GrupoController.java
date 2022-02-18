@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping("/grupos")
 public class GrupoController {
 
     @Autowired
