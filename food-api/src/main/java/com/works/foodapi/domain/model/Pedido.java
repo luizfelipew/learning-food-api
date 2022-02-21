@@ -21,7 +21,7 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private BigDecimal subTotal;
+    private BigDecimal subtotal;
     private BigDecimal taxaFrete;
     private BigDecimal valorTotal;
 
@@ -39,7 +39,7 @@ public class Pedido {
     private OffsetDateTime dataEntrega;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private FormaPagamento formaPagamento;
 
@@ -57,11 +57,11 @@ public class Pedido {
 
 
     public void calcularValorTotal() {
-        this.subTotal = getItens().stream()
+        this.subtotal = getItens().stream()
                 .map(item -> item.getPrecoTotal())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        this.valorTotal = this.subTotal.add(this.taxaFrete);
+        this.valorTotal = this.subtotal.add(this.taxaFrete);
     }
 
     public void definirFrete() {

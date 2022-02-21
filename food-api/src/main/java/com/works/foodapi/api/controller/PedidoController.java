@@ -1,7 +1,9 @@
 package com.works.foodapi.api.controller;
 
 import com.works.foodapi.api.assembler.PedidoModelAssembler;
+import com.works.foodapi.api.assembler.PedidoResumoModelAssembler;
 import com.works.foodapi.api.model.PedidoModel;
+import com.works.foodapi.api.model.PedidoResumoModel;
 import com.works.foodapi.domain.model.Pedido;
 import com.works.foodapi.domain.repository.PedidoRepository;
 import com.works.foodapi.domain.service.EmissaoPedidoService;
@@ -26,11 +28,16 @@ public class PedidoController {
     @Autowired
     private PedidoModelAssembler pedidoModelAssembler;
 
+    @Autowired
+    private PedidoResumoModelAssembler pedidoResumoModelAssembler;
+
+
+
     @GetMapping
-    public List<PedidoModel> listar() {
+    public List<PedidoResumoModel> listar() {
         List<Pedido> todosPedidos = pedidoRepository.findAll();
 
-        return pedidoModelAssembler.toCollectionModel(todosPedidos);
+        return pedidoResumoModelAssembler.toCollectionModel(todosPedidos);
     }
 
     @GetMapping("/{pedidoId}")
