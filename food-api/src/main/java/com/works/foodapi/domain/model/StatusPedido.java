@@ -3,7 +3,7 @@ package com.works.foodapi.domain.model;
 public enum StatusPedido {
     CRIADO("Criado"),
     CONFIRMADO("Confirmado"),
-    ENTREGE("Entregue"),
+    ENTREGUE("Entregue"),
     CANCELADO("Cancelado");
 
     private String descricao;
