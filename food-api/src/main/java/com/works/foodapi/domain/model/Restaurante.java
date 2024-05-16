@@ -1,5 +1,6 @@
 package com.works.foodapi.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.works.foodapi.core.validation.ValorZeroIncluiDescricao;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -50,6 +51,7 @@ public class Restaurante {
     @Column(nullable = false, columnDefinition = "datetime")
     private OffsetDateTime dataAtualizacao;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "restaurante_forma_pagamento",
             joinColumns = @JoinColumn(name = "restaurante_id"),
