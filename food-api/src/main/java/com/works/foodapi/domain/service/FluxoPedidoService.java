@@ -17,22 +17,22 @@ public class FluxoPedidoService {
     private final EmissaoPedidoService emissaoPedidoService;
 
     @Transactional
-    public void confirmar(final Long pedidoId) {
-        val pedido = emissaoPedidoService.buscarOuFalhar(pedidoId);
+    public void confirmar(final String codigoPedido) {
+        val pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
 
         pedido.confirmar();
     }
 
     @Transactional
-    public void cancelar(final Long pedidoId) {
-        val pedido = emissaoPedidoService.buscarOuFalhar(pedidoId);
+    public void cancelar(final String codigoPedido) {
+        val pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
 
         pedido.cancelar();
     }
 
     @Transactional
-    public void entregar(Long pedidoId) {
-        val pedido = emissaoPedidoService.buscarOuFalhar(pedidoId);
+    public void entregar(final String codigoPedido) {
+        val pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
 
         pedido.entregar();
     }
