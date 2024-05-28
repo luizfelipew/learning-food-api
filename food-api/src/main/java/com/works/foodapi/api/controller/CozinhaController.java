@@ -26,6 +26,7 @@ public class CozinhaController {
     private final CozinhaModelAssembler cozinhaModelAssembler;
     private final CozinhaInputDisassembler cozinhaInputDisassembler;
 
+    @GetMapping
     public List<CozinhaModel> listar() {
         final List<Cozinha> todasCozinhas = cozinhaRepository.findAll();
 
