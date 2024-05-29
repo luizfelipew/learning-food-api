@@ -9,7 +9,7 @@ import com.works.foodapi.domain.model.Restaurante;
 import com.works.foodapi.domain.repository.ProdutoRepository;
 import com.works.foodapi.domain.service.CadastroProdutoService;
 import com.works.foodapi.domain.service.CadastroRestauranteService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,29 +17,32 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/restaurantes/{restauranteId}/produtos")
 public class RestauranteProdutoController {
 
-    @Autowired
-    private ProdutoRepository produtoRepository;
 
-    @Autowired
-    private CadastroProdutoService cadastroProduto;
+    private final ProdutoRepository produtoRepository;
 
-    @Autowired
-    private CadastroRestauranteService cadastroRestaurante;
+    private final CadastroProdutoService cadastroProduto;
 
-    @Autowired
-    private ProdutoModelAssembler produtoModelAssembler;
+    private final CadastroRestauranteService cadastroRestaurante;
 
-    @Autowired
-    private ProdutoInputDisassembler produtoInputDisassembler;
+    private final ProdutoModelAssembler produtoModelAssembler;
+
+    private final ProdutoInputDisassembler produtoInputDisassembler;
 
     @GetMapping
-    public List<ProdutoModel> listar(@PathVariable final Long restauranteId) {
+    public List<ProdutoModel> listar(@PathVariable final Long restauranteId,
+                                     @RequestParam(required = false) boolean incluirInativos) {
         final Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
+        List<Produto> todosProdutos = null;
 
-        final List<Produto> todosProdutos = produtoRepository.findByRestaurante(restaurante);
+        if (incluirInativos){
+            todosProdutos = produtoRepository.findTodosByRestaurante(restaurante);
+        } else {
+            todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
+        }
 
         return produtoModelAssembler.toCollectionModel(todosProdutos);
     }
