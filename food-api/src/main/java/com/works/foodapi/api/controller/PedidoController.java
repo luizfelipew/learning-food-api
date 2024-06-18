@@ -13,7 +13,9 @@ import com.works.foodapi.domain.exception.NegocioException;
 import com.works.foodapi.domain.model.Pedido;
 import com.works.foodapi.domain.model.Usuario;
 import com.works.foodapi.domain.repository.PedidoRepository;
+import com.works.foodapi.domain.repository.filter.PedidoFilter;
 import com.works.foodapi.domain.service.EmissaoPedidoService;
+import com.works.foodapi.infrastructure.repository.spec.PedidoSpecs;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -61,8 +63,8 @@ public class PedidoController {
 //    }
 
     @GetMapping
-    public List<PedidoResumoModel> listar() {
-        List<Pedido> todosPedidos = pedidoRepository.findAll();
+    public List<PedidoResumoModel> pesquisar(final PedidoFilter filtro) {
+        List<Pedido> todosPedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro));
 
         return pedidoResumoModelAssembler.toCollectionModel(todosPedidos);
     }
