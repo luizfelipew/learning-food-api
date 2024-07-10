@@ -8,7 +8,10 @@ import com.works.foodapi.domain.model.Cozinha;
 import com.works.foodapi.domain.repository.CozinhaRepository;
 import com.works.foodapi.domain.service.CadastroCozinhaService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +30,15 @@ public class CozinhaController {
     private final CozinhaInputDisassembler cozinhaInputDisassembler;
 
     @GetMapping
-    public List<CozinhaModel> listar() {
-        final List<Cozinha> todasCozinhas = cozinhaRepository.findAll();
+    public Page<CozinhaModel> listar(@PageableDefault final Pageable pageable) {
+        final Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
 
-        return cozinhaModelAssembler.toCollectionModel(todasCozinhas);
+        final List<CozinhaModel> cozinhasModel = cozinhaModelAssembler
+                .toCollectionModel(cozinhasPage.getContent());
+
+        final Page<CozinhaModel> cozinhaModelPage = new PageImpl<>(cozinhasModel, pageable, cozinhasPage.getTotalElements());
+
+        return cozinhaModelPage;
     }
 
 
