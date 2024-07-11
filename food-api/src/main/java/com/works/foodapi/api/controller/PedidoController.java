@@ -1,7 +1,5 @@
 package com.works.foodapi.api.controller;
 
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.works.foodapi.api.assembler.PedidoInputDisassembler;
 import com.works.foodapi.api.assembler.PedidoModelAssembler;
 import com.works.foodapi.api.assembler.PedidoResumoModelAssembler;
@@ -17,11 +15,11 @@ import com.works.foodapi.domain.repository.filter.PedidoFilter;
 import com.works.foodapi.domain.service.EmissaoPedidoService;
 import com.works.foodapi.infrastructure.repository.spec.PedidoSpecs;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -63,10 +61,17 @@ public class PedidoController {
 //    }
 
     @GetMapping
-    public List<PedidoResumoModel> pesquisar(final PedidoFilter filtro) {
-        List<Pedido> todosPedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro));
+    public Page<PedidoResumoModel> pesquisar(final PedidoFilter filtro,
+                                             @PageableDefault final Pageable pageable) {
+        Page<Pedido> pedidosPage = pedidoRepository
+                .findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
 
-        return pedidoResumoModelAssembler.toCollectionModel(todosPedidos);
+        List<PedidoResumoModel> pedidosResumoModel = pedidoResumoModelAssembler
+                .toCollectionModel(pedidosPage.getContent());
+
+        PageImpl<PedidoResumoModel> pedidosResumoModelPage = new PageImpl<>(pedidosResumoModel, pageable, pedidosPage.getTotalElements());
+
+        return pedidosResumoModelPage;
     }
 
     @GetMapping("/{codigoPedido}")
