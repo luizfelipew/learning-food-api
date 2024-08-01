@@ -13,7 +13,7 @@ import com.works.foodapi.domain.exception.NegocioException;
 import com.works.foodapi.domain.model.Pedido;
 import com.works.foodapi.domain.model.Usuario;
 import com.works.foodapi.domain.repository.PedidoRepository;
-import com.works.foodapi.domain.repository.filter.PedidoFilter;
+import com.works.foodapi.domain.filter.PedidoFilter;
 import com.works.foodapi.domain.service.EmissaoPedidoService;
 import com.works.foodapi.infrastructure.repository.spec.PedidoSpecs;
 import lombok.RequiredArgsConstructor;

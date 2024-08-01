@@ -1,4 +1,4 @@
-package com.works.foodapi.domain.repository.filter;
+package com.works.foodapi.domain.filter;
 
 import lombok.Getter;
 import lombok.Setter;
