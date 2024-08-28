@@ -1,4 +1,4 @@
-package com.works.foodapi.infrastructure.service;
+package com.works.foodapi.infrastructure.service.query;
 
 import com.works.foodapi.domain.filter.VendaDiariaFilter;
 import com.works.foodapi.domain.model.Pedido;
