@@ -3,6 +3,7 @@ package com.works.foodapi.domain.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -24,5 +25,12 @@ public class FotoProduto {
     private String descricao;
     private String contentType;
     private Long tamanho;
+
+    public Long getRestauranteId() {
+        if (Objects.nonNull(getProduto())) {
+            return getProduto().getRestaurante().getId();
+        }
+        return null;
+    }
 
 }
