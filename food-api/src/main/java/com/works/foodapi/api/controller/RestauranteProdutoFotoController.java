@@ -1,6 +1,11 @@
 package com.works.foodapi.api.controller;
 
+import com.works.foodapi.api.assembler.FotoProdutoModelAssembler;
+import com.works.foodapi.api.model.FotoProdutoModel;
 import com.works.foodapi.api.model.input.FotoProdutoInput;
+import com.works.foodapi.domain.model.FotoProduto;
+import com.works.foodapi.domain.service.CadastroProdutoService;
+import com.works.foodapi.domain.service.CatalagoFotoProdutoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -11,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.nio.file.Path;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -20,23 +23,27 @@ import java.util.UUID;
 @RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
 public class RestauranteProdutoFotoController {
 
+    private final CadastroProdutoService cadastroProdutoService;
+    private final CatalagoFotoProdutoService catalagoFotoProdutoService;
+    private final FotoProdutoModelAssembler fotoProdutoModelAssembler;
+
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void atualizarFoto(@PathVariable Long restauranteId,
-                              @PathVariable Long produtoId,
-                              @Valid FotoProdutoInput fotoProdutoInput) {
-        val nomeArquivo = UUID.randomUUID()
-                + "_" + fotoProdutoInput.getArquivo().getOriginalFilename();
+    public FotoProdutoModel atualizarFoto(@PathVariable Long restauranteId,
+                                          @PathVariable Long produtoId,
+                                          @Valid FotoProdutoInput fotoProdutoInput) {
 
-        val arquivoFoto = Path.of("/Users/luizfelipew/Documents/git/spring-boot/alga-works/catalogo", nomeArquivo);
+        val produto = cadastroProdutoService.buscarOuFalhar(restauranteId, produtoId);
+        val arquivo = fotoProdutoInput.getArquivo();
 
-        log.info(String.valueOf(fotoProdutoInput.getDescricao()));
-        log.info(String.valueOf(arquivoFoto));
-        log.info(fotoProdutoInput.getArquivo().getContentType());
+        FotoProduto foto = new FotoProduto();
+        foto.setProduto(produto);
+        foto.setDescricao(fotoProdutoInput.getDescricao());
+        foto.setContentType(arquivo.getContentType());
+        foto.setTamanho(arquivo.getSize());
+        foto.setNomeArquivo(arquivo.getOriginalFilename());
 
-        try {
-            fotoProdutoInput.getArquivo().transferTo(arquivoFoto);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        val fotoSalva = catalagoFotoProdutoService.salvar(foto);
+
+        return fotoProdutoModelAssembler.toModel(fotoSalva);
     }
 }
