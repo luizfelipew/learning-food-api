@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -21,10 +22,15 @@ public class CatalagoFotoProdutoService {
         val restauranteId = foto.getRestauranteId();
         val produtoId = foto.getProduto().getId();
         val nomeNovoArquivo = fotoStorageService.gerarNomeArquivo(foto.getNomeArquivo());
+        String nomeArquivoExistente = null;
 
         val fotoExistente = produtoRepository.findFotoById(restauranteId, produtoId);
 
-        fotoExistente.ifPresent(produtoRepository::delete);
+//        fotoExistente.ifPresent(produtoRepository::delete);
+        if (fotoExistente.isPresent()) {
+            nomeArquivoExistente = fotoExistente.get().getNomeArquivo();
+            produtoRepository.delete(fotoExistente.get());
+        }
 
         foto.setNomeArquivo(nomeNovoArquivo);
         val fotoSalva = produtoRepository.save(foto);
@@ -36,7 +42,7 @@ public class CatalagoFotoProdutoService {
                 .inputStream(dadosArquivo)
                 .build();
 
-        fotoStorageService.armazenar(novaFoto);
+        fotoStorageService.substituir(nomeArquivoExistente, novaFoto);
 
         return fotoSalva;
     }
