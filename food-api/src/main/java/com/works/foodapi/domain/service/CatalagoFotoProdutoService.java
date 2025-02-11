@@ -1,5 +1,6 @@
 package com.works.foodapi.domain.service;
 
+import com.works.foodapi.domain.exception.FotoProdutoNaoEncontradaException;
 import com.works.foodapi.domain.model.FotoProduto;
 import com.works.foodapi.domain.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,10 @@ public class CatalagoFotoProdutoService {
         fotoStorageService.substituir(nomeArquivoExistente, novaFoto);
 
         return fotoSalva;
+    }
+
+    public FotoProduto buscarOuFalhar(Long restauranteId, Long produtoId) {
+        return produtoRepository.findFotoById(restauranteId, produtoId)
+                .orElseThrow(() -> new FotoProdutoNaoEncontradaException(restauranteId, produtoId));
     }
 }

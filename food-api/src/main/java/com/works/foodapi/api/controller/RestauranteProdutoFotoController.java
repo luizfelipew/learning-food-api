@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -27,6 +24,15 @@ public class RestauranteProdutoFotoController {
     private final CadastroProdutoService cadastroProdutoService;
     private final CatalagoFotoProdutoService catalagoFotoProdutoService;
     private final FotoProdutoModelAssembler fotoProdutoModelAssembler;
+
+    @GetMapping
+    public FotoProdutoModel buscar(@PathVariable Long restauranteId,
+                                   @PathVariable Long produtoId) {
+        log.info("Buscando foto do produto {} do restaurante {}", produtoId, restauranteId);
+        FotoProduto fotoProduto = catalagoFotoProdutoService.buscarOuFalhar(restauranteId, produtoId);
+
+        return fotoProdutoModelAssembler.toModel(fotoProduto);
+    }
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FotoProdutoModel atualizarFoto(@PathVariable Long restauranteId,
@@ -47,4 +53,5 @@ public class RestauranteProdutoFotoController {
 
         return fotoProdutoModelAssembler.toModel(fotoSalva);
     }
+
 }
