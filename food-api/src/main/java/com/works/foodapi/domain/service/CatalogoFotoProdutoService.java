@@ -12,7 +12,7 @@ import java.io.InputStream;
 
 @RequiredArgsConstructor
 @Service
-public class CatalagoFotoProdutoService {
+public class CatalogoFotoProdutoService {
 
     private final ProdutoRepository produtoRepository;
     private final FotoStorageService fotoStorageService;
@@ -45,6 +45,15 @@ public class CatalagoFotoProdutoService {
         fotoStorageService.substituir(nomeArquivoExistente, novaFoto);
 
         return fotoSalva;
+    }
+
+    public void excluir(Long restauranteId, Long produtoId) {
+        val foto = buscarOuFalhar(restauranteId, produtoId);
+
+        produtoRepository.delete(foto);
+        produtoRepository.flush();
+
+        fotoStorageService.remover(foto.getNomeArquivo());
     }
 
     public FotoProduto buscarOuFalhar(Long restauranteId, Long produtoId) {

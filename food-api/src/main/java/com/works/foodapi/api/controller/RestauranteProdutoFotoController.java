@@ -6,7 +6,7 @@ import com.works.foodapi.api.model.input.FotoProdutoInput;
 import com.works.foodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.works.foodapi.domain.model.FotoProduto;
 import com.works.foodapi.domain.service.CadastroProdutoService;
-import com.works.foodapi.domain.service.CatalagoFotoProdutoService;
+import com.works.foodapi.domain.service.CatalogoFotoProdutoService;
 import com.works.foodapi.domain.service.FotoStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 @Slf4j
@@ -30,7 +29,7 @@ import java.util.List;
 public class RestauranteProdutoFotoController {
 
     private final CadastroProdutoService cadastroProdutoService;
-    private final CatalagoFotoProdutoService catalagoFotoProdutoService;
+    private final CatalogoFotoProdutoService catalogoFotoProdutoService;
     private final FotoStorageService fotoStorageService;
     private final FotoProdutoModelAssembler fotoProdutoModelAssembler;
 
@@ -49,7 +48,7 @@ public class RestauranteProdutoFotoController {
         foto.setTamanho(arquivo.getSize());
         foto.setNomeArquivo(arquivo.getOriginalFilename());
 
-        val fotoSalva = catalagoFotoProdutoService.salvar(foto, arquivo.getInputStream());
+        val fotoSalva = catalogoFotoProdutoService.salvar(foto, arquivo.getInputStream());
 
         return fotoProdutoModelAssembler.toModel(fotoSalva);
     }
@@ -58,7 +57,7 @@ public class RestauranteProdutoFotoController {
     public FotoProdutoModel buscar(@PathVariable Long restauranteId,
                                    @PathVariable Long produtoId) {
         log.info("Buscando foto do produto {} do restaurante {}", produtoId, restauranteId);
-        FotoProduto fotoProduto = catalagoFotoProdutoService.buscarOuFalhar(restauranteId, produtoId);
+        FotoProduto fotoProduto = catalogoFotoProdutoService.buscarOuFalhar(restauranteId, produtoId);
 
         return fotoProdutoModelAssembler.toModel(fotoProduto);
     }
@@ -68,7 +67,7 @@ public class RestauranteProdutoFotoController {
                                                           @PathVariable Long produtoId,
                                                           @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {
-            val fotoProduto = catalagoFotoProdutoService.buscarOuFalhar(restauranteId, produtoId);
+            val fotoProduto = catalogoFotoProdutoService.buscarOuFalhar(restauranteId, produtoId);
 
             MediaType mediaTypeFoto = MediaType.parseMediaType(fotoProduto.getContentType());
 
@@ -86,6 +85,13 @@ public class RestauranteProdutoFotoController {
                     .notFound()
                     .build();
         }
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long restauranteId,
+                        @PathVariable Long produtoId) {
+        catalogoFotoProdutoService.excluir(restauranteId, produtoId);
     }
 
     private void verificarCompatibilidadeMediaType(MediaType mediaTypeFoto, List<MediaType> mediaTypesAceitas) throws HttpMediaTypeNotAcceptableException {
