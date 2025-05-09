@@ -1,6 +1,8 @@
 package com.works.foodapi.infrastructure.service.storage;
 
+import com.works.foodapi.core.storage.StorageProperties;
 import com.works.foodapi.domain.service.FotoStorageService;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,10 +13,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Service
+@RequiredArgsConstructor
 public class LocalFotoStorageService implements FotoStorageService {
 
-    @Value("${algofood.storage.local.diretorio-fotos}")
-    private Path diretorioFotos;
+    private final StorageProperties storageProperties;
 
     @Override
     public InputStream recuperar(String nomeArquivo) {
@@ -49,6 +51,8 @@ public class LocalFotoStorageService implements FotoStorageService {
     }
 
     private Path getArquivoPath(String nomeArquivo) {
-        return diretorioFotos.resolve(Path.of(nomeArquivo));
+        return storageProperties.getLocal()
+                .getDiretorioFotos()
+                .resolve(Path.of(nomeArquivo));
     }
 }
