@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -63,7 +64,7 @@ public class RestauranteProdutoFotoController {
     }
 
     @GetMapping
-    public ResponseEntity<InputStreamResource> servirFoto(@PathVariable Long restauranteId,
+    public ResponseEntity<?> servirFoto(@PathVariable Long restauranteId,
                                                           @PathVariable Long produtoId,
                                                           @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {
         try {
@@ -75,11 +76,18 @@ public class RestauranteProdutoFotoController {
 
             verificarCompatibilidadeMediaType(mediaTypeFoto, mediaTypesAceitas);
 
-            val inputStream = fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
+            val fotoRecuperada = fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
 
-            return ResponseEntity.ok()
-                    .contentType(mediaTypeFoto)
-                    .body(new InputStreamResource(inputStream));
+            if (fotoRecuperada.temUrl()) {
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .header(HttpHeaders.LOCATION, fotoRecuperada.getUrl())
+                        .build();
+            } else {
+                return ResponseEntity.ok()
+                        .contentType(mediaTypeFoto)
+                        .body(new InputStreamResource(fotoRecuperada.getInputStream()));
+            }
+
         } catch (EntidadeNaoEncontradaException ex) {
             return ResponseEntity
                     .notFound()
