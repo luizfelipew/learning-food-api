@@ -8,14 +8,13 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.works.foodapi.core.storage.StorageProperties;
 import com.works.foodapi.domain.service.FotoStorageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
 public class S3FotoStorageService implements FotoStorageService {
 
     private final AmazonS3 amazonS3;
     private final StorageProperties storageProperties;
+
 
     @Override
     public FotoRecuperada recuperar(String nomeArquivo) {
