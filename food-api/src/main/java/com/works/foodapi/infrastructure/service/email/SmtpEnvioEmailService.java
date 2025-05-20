@@ -24,14 +24,13 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
 
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
             helper.setFrom(emailProperties.getRemetente());
-            helper.setTo(mensagem.getDestinatários().toArray(new String[0]));
+            helper.setTo(mensagem.getDestinatarios().toArray(new String[0]));
             helper.setSubject(mensagem.getAssunto());
             helper.setText(mensagem.getCorpo(), true);
 
         } catch (Exception ex) {
             throw new EmailException("Não foi possivel enviar e-mail", ex);
         }
-
 
 //        emailSender.send();
     }
