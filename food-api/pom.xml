@@ -21,6 +21,7 @@
         <jasperreports.version>7.0.0</jasperreports.version>
         <aws-java-sdk-s3.version>1.12.783</aws-java-sdk-s3.version>
         <spring-boot-starter-mail.version>3.4.5</spring-boot-starter-mail.version>
+        <freemarker.version>2.3.34</freemarker.version>
     </properties>
 
     <dependencies>
@@ -113,6 +114,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>${freemarker.version}</version>
         </dependency>
     </dependencies>
 
